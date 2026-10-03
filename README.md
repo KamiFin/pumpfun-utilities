@@ -14,6 +14,12 @@ It is read-only. It uses your public wallet address, no private key, and it cann
 
 The `pumpfun-journal` skill is what Claude follows while you do this. The main rule: it never invents a thesis, an outcome or a mistake. Those lines stay `not recorded` until you say something.
 
+![The positions pane with values hidden: token, percentage and wallet only](docs/pane-hidden.png)
+
+![The same pane after Reveal: value and profit or loss in dollars as well](docs/pane-revealed.png)
+
+These are demo positions (`demo` setting, or `PUMPFUN_DEMO=1 claude`): made up, no wallet needed. A first look takes one command.
+
 ## Install
 
 You need Claude Code 2.1.287 or later (the version that introduced mods) and Python 3.
