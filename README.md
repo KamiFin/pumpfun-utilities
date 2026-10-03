@@ -21,7 +21,7 @@ You need Claude Code 2.1.287 or later (the version that introduced mods) and Pyt
 ```
 claude plugin marketplace add KamiFin/pumpfun-utilities
 claude plugin install pumpfun-utilities@pumpfun-utilities
-claude plugin configure pumpfun-utilities
+claude plugin configure pumpfun-utilities@pumpfun-utilities
 ```
 
 Then start a new session. If the pane never appears, mods may be switched off for installed plugins in your account's rollout. Setting `CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1` in the `env` block of `~/.claude/settings.json` turns them on.
