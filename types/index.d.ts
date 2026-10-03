@@ -9,7 +9,7 @@ export type Position = {
 
 declare module 'claude-code' {
   interface PluginState {
-    'pumpfun-trader-kit': {
+    'pumpfun-utilities': {
       rows: Position[]
       failed: string[]
       isBusy: boolean

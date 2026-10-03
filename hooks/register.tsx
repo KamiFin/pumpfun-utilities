@@ -5,15 +5,15 @@ import { columns, headerCells, parsePositions, rowCells, totalCells } from './pa
 
 const PANE = 'positions-pane'
 
-const rows = atom({ plugin: 'pumpfun-trader-kit', key: 'rows' } as const, [])
-const failed = atom({ plugin: 'pumpfun-trader-kit', key: 'failed' } as const, [])
-const isBusy = atom({ plugin: 'pumpfun-trader-kit', key: 'isBusy' } as const, false)
-const problem = atom({ plugin: 'pumpfun-trader-kit', key: 'problem' } as const, null)
-const updatedAt = atom({ plugin: 'pumpfun-trader-kit', key: 'updatedAt' } as const, '')
-const isRevealed = atom({ plugin: 'pumpfun-trader-kit', key: 'isRevealed' } as const, false)
-const isOpen = atom({ plugin: 'pumpfun-trader-kit', key: 'isOpen' } as const, false)
-const isAuto = atom({ plugin: 'pumpfun-trader-kit', key: 'isAuto' } as const, false)
-const turn = atom({ plugin: 'pumpfun-trader-kit', key: 'turn' } as const, '')
+const rows = atom({ plugin: 'pumpfun-utilities', key: 'rows' } as const, [])
+const failed = atom({ plugin: 'pumpfun-utilities', key: 'failed' } as const, [])
+const isBusy = atom({ plugin: 'pumpfun-utilities', key: 'isBusy' } as const, false)
+const problem = atom({ plugin: 'pumpfun-utilities', key: 'problem' } as const, null)
+const updatedAt = atom({ plugin: 'pumpfun-utilities', key: 'updatedAt' } as const, '')
+const isRevealed = atom({ plugin: 'pumpfun-utilities', key: 'isRevealed' } as const, false)
+const isOpen = atom({ plugin: 'pumpfun-utilities', key: 'isOpen' } as const, false)
+const isAuto = atom({ plugin: 'pumpfun-utilities', key: 'isAuto' } as const, false)
+const turn = atom({ plugin: 'pumpfun-utilities', key: 'turn' } as const, '')
 
 // Top-level on purpose: the validator only lets `$` be passed to functions declared here.
 // The script is read-only in this mode: no journal, no snapshot, no wallet address printed.

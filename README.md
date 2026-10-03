@@ -1,4 +1,4 @@
-# pumpfun-trader-kit
+# pumpfun-utilities
 
 Two things for people who trade on pump.fun and use Claude Code.
 
@@ -19,9 +19,9 @@ The `pumpfun-journal` skill is what Claude follows while you do this. The main r
 You need Claude Code 2.1.287 or later (the version that introduced mods) and Python 3.
 
 ```
-claude plugin marketplace add KamiFin/pumpfun-trader-kit
-claude plugin install pumpfun-trader-kit@pumpfun-trader-kit
-claude plugin configure pumpfun-trader-kit
+claude plugin marketplace add KamiFin/pumpfun-utilities
+claude plugin install pumpfun-utilities@pumpfun-utilities
+claude plugin configure pumpfun-utilities
 ```
 
 Then start a new session. If the pane never appears, mods may be switched off for installed plugins in your account's rollout. Setting `CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1` in the `env` block of `~/.claude/settings.json` turns them on.

@@ -1,10 +1,10 @@
 {
-  "name": "pumpfun-trader-kit",
+  "name": "pumpfun-utilities",
   "version": "0.1.0",
   "description": "Your open pump.fun positions in a pane while Claude works, and a markdown trade journal that fills itself. Read-only, no keys, no trading",
   "author": { "name": "KamiFin", "url": "https://github.com/KamiFin" },
-  "homepage": "https://github.com/KamiFin/pumpfun-trader-kit",
-  "repository": "https://github.com/KamiFin/pumpfun-trader-kit",
+  "homepage": "https://github.com/KamiFin/pumpfun-utilities",
+  "repository": "https://github.com/KamiFin/pumpfun-utilities",
   "license": "MIT",
   "keywords": ["pump.fun", "solana", "trading", "journal", "positions"],
   "types": "./types/index.d.ts",
