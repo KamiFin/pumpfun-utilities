@@ -13,6 +13,7 @@ Settings come from the environment (the Claude Code plugin sets them from its ow
   PUMPFUN_JOURNAL_DIR      folder for the journal files (default ~/pumpfun-journal)
   PUMPFUN_HELIUS_KEY       Helius API key, only for the REWARDS section (optional;
                            HELIUS_API_KEY works too)
+  PUMPFUN_DEMO             1 makes --open-json print made-up positions (no wallet, no network)
 
 Data sources (public, unauthenticated, an undocumented frontend API that can change):
   GET  frontend-api-v3.pump.fun/user-portfolio/<wallet>?filter=closed|open&page=N&pageSize=100
@@ -660,6 +661,22 @@ def scan_wallet(wallet, label, args, known, since_iso):
             "dust_count": len(dust), "dust_value": dust_value}
 
 
+DEMO_ROWS = [  # made-up positions for PUMPFUN_DEMO=1: screenshots and a first look, no wallet, no network
+    ("MOONCAT", "Solana", "main-wallet", 412.80, 250.00),
+    ("PIXELDOG", "Solana", "main-wallet", 96.40, 160.00),
+    ("BLOBFISH", "Solana", "side-wallet", 58.20, 20.00),
+    ("GLITCH", "Robinhood", "main-wallet", 33.10, 41.50),
+    ("ZENFROG", "Solana", "side-wallet", 12.70, 12.20),
+]
+
+
+def demo_json():
+    rows = [{"symbol": sym, "mint": f"demo{i}", "chain": chain, "value": value, "cost": cost,
+             "upnl": value - cost, "mc": None, "wallet": wallet}
+            for i, (sym, chain, wallet, value, cost) in enumerate(DEMO_ROWS)]
+    print(json.dumps({"rows": rows, "failed": []}))
+
+
 def open_json(min_usd):
     """Open positions of the main wallet and every wallet in wallets.json, all chains, as JSON
     for the positions-pane mod. Read-only: no journal, no snapshot, no wallet address in the
@@ -697,6 +714,10 @@ def main():
     ap.add_argument("--open-json", action="store_true",
                     help="print open positions of all tracked wallets and chains as JSON and exit (read-only, used by the positions pane)")
     args = ap.parse_args()
+
+    if args.open_json and os.environ.get("PUMPFUN_DEMO") == "1":
+        demo_json()
+        return
     require_wallet()
 
     if args.open_json:

@@ -65,7 +65,9 @@ async function openIfStillWorking($: EngineInterface, cfg: Settings, id: string)
 
 export const register: Register = (on, options) => {
   // Settings reach the script as environment variables, so no secret sits in a command line.
-  const env: Record<string, string> = { PUMPFUN_WALLET: String(options.wallet) }
+  const env: Record<string, string> = { PUMPFUN_WALLET: String(options.wallet ?? '') }
+
+  if (options.demo) env.PUMPFUN_DEMO = '1'
 
   if (options.extraWallets) env.PUMPFUN_EXTRA_WALLETS = String(options.extraWallets)
   if (options.journalDir) env.PUMPFUN_JOURNAL_DIR = String(options.journalDir)

@@ -55,5 +55,20 @@ class ParseJournal(unittest.TestCase):
         self.assertEqual([(w, m) for w, m, _ in found], [("main", "MintA"), ("second", "MintB")])
 
 
+class Demo(unittest.TestCase):
+    def test_demo_rows_have_the_shape_the_pane_reads_and_no_real_data(self):
+        import contextlib, io, json
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            journal.demo_json()
+        data = json.loads(buf.getvalue())
+        self.assertEqual(data["failed"], [])
+        self.assertGreaterEqual(len(data["rows"]), 4)
+        for row in data["rows"]:
+            self.assertEqual(sorted(row), ["chain", "cost", "mc", "mint", "symbol", "upnl", "value", "wallet"])
+            self.assertAlmostEqual(row["upnl"], row["value"] - row["cost"])
+        self.assertNotIn(os.environ["PUMPFUN_WALLET"], buf.getvalue())
+
+
 if __name__ == "__main__":
     unittest.main()

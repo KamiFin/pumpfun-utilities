@@ -32,7 +32,8 @@ Nothing is hardcoded. Everything personal is a plugin setting, filled in with `c
 
 | Setting | Required | What it is |
 |---|---|---|
-| `wallet` | yes | Your main wallet address. Public, read-only. |
+| `wallet` | yes, unless demo | Your main wallet address. Public, read-only. |
+| `demo` | no | Show made-up positions in the pane, with no wallet and no network call. For a first look or a screenshot that shows nothing personal. |
 | `mainLabel` | no | The name shown for your main wallet in the Wallet column, for example your pump.fun username. Default `main`. |
 | `extraWallets` | no | Other wallets as `label=address,label=address`. |
 | `journalDir` | no | Folder for the journal. Empty means `~/pumpfun-journal`. Point it at an Obsidian vault if you like. |
