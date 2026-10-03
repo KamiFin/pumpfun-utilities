@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-import { money, parsePositions, percent, tag, totals } from './parse'
+import { columns, headerCells, money, parsePositions, percent, rowCells, totalCells, totals, walletName } from './parse'
 
 // Shape of a --open-json run (values rounded, mints left out).
 const OUT = JSON.stringify({
@@ -32,11 +32,30 @@ test('rows without a symbol or value are dropped', () => {
   ])
 })
 
-test('the tag names chain and wallet only when they are not main on Solana', () => {
+test('the wallet column names the wallet, with the main wallet under a name you choose', () => {
   const rows = parsePositions(OUT)?.rows ?? []
 
-  expect(tag(rows[0])).toBe('')
-  expect(tag(rows[2])).toBe(' chain 777 · second')
+  expect(walletName(rows[0], 'justFilz')).toBe('justFilz')
+  expect(walletName(rows[2], 'justFilz')).toBe('second')
+  expect(walletName(rows[0], 'main')).toBe('main')
+})
+
+test('header, rows and total have the same columns', () => {
+  const rows = parsePositions(OUT)?.rows ?? []
+
+  expect(headerCells(true)).toEqual(['Token', 'Value', 'PnL $', 'PnL %', 'Wallet'])
+  expect(rowCells(rows[2], true, 'justFilz')).toEqual(['GAMMA', '$20.00', '$10.00', '+100.0%', 'second'])
+  expect(totalCells(rows.slice(0, 2), true)).toEqual(['Total', '$180', '-$140', '-43.8%', ''])
+  expect(columns(true)).toHaveLength(5)
+})
+
+test('with values hidden only token, percent and wallet remain', () => {
+  const rows = parsePositions(OUT)?.rows ?? []
+
+  expect(headerCells(false)).toEqual(['Token', 'PnL %', 'Wallet'])
+  expect(rowCells(rows[0], false, 'justFilz')).toEqual(['ALPHA', '-40.2%', 'justFilz'])
+  expect(totalCells(rows.slice(0, 2), false)).toEqual(['Total', '-43.8%', ''])
+  expect(columns(false)).toHaveLength(3)
 })
 
 test('money and percent', () => {

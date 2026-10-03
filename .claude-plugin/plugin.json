@@ -15,6 +15,12 @@
       "description": "Your main pump.fun wallet address (public, read-only: nothing here can sign or send)",
       "required": true
     },
+    "mainLabel": {
+      "type": "string",
+      "title": "Name of the main wallet",
+      "description": "Shown in the Wallet column for the main wallet, for example your pump.fun username",
+      "default": "main"
+    },
     "extraWallets": {
       "type": "string",
       "title": "Extra wallets (optional)",

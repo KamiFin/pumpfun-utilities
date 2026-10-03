@@ -1,7 +1,7 @@
 import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register } from 'claude-code'
 
-import { money, parsePositions, percent, tag, totals } from './parse'
+import { columns, headerCells, parsePositions, rowCells, totalCells } from './parse'
 
 const PANE = 'positions-pane'
 
@@ -17,7 +17,7 @@ const turn = atom({ plugin: 'pumpfun-trader-kit', key: 'turn' } as const, '')
 
 // Top-level on purpose: the validator only lets `$` be passed to functions declared here.
 // The script is read-only in this mode: no journal, no snapshot, no wallet address printed.
-type Settings = { env: Record<string, string>; minUsd: number }
+type Settings = { env: Record<string, string>; minUsd: number; mainLabel: string }
 
 const SCRIPT = 'scripts/pumpfun_journal.py'
 
@@ -72,7 +72,7 @@ export const register: Register = (on, options) => {
   if (options.heliusKey) env.PUMPFUN_HELIUS_KEY = String(options.heliusKey)
 
   const afterMs = Math.max(1, Number(options.minSeconds)) * 1000
-  const cfg: Settings = { env, minUsd: Number(options.minUsd) }
+  const cfg: Settings = { env, minUsd: Number(options.minUsd), mainLabel: String(options.mainLabel || 'main') }
   const everyMs = Math.max(5, Number(options.refreshSeconds)) * 1000
 
   on('session.start', async ($, e, next) => {
@@ -147,29 +147,34 @@ export const register: Register = (on, options) => {
     const at = await read($, updatedAt)
     const missing = await read($, failed)
     const revealed = await read($, isRevealed)
-    const sum = totals(list)
+    const sum = { upnl: list.reduce((acc, row) => acc + row.upnl, 0) }
     const tint = (n: number) => (n >= 0 ? 'green' : 'red')
+    const cols = columns(revealed)
+    // One row of fixed-width boxes; numbers sit at the right edge of their box.
+    const table = (cells: string[], color: string | undefined, isBold: boolean) => (
+      <Box columnGap={1}>
+        {cells.map((cell, i) => (
+          <Box key={cols[i].label} width={cols[i].width} justifyContent={cols[i].isRight ? 'flex-end' : 'flex-start'}>
+            <Text color={color} dimColor={color === undefined} bold={isBold}>
+              {cell}
+            </Text>
+          </Box>
+        ))}
+      </Box>
+    )
 
     return (
       <Box flexDirection="column">
         {trouble && <Text color="red">{trouble}</Text>}
         {missing.length > 0 && <Text color="yellow">Could not read: {missing.join(', ')}</Text>}
         {list.length === 0 && !trouble && <Text dimColor>No open positions above the dust floor.</Text>}
+        {list.length > 0 && table(headerCells(revealed), undefined, false)}
         {list.map(row => (
-          <Text key={`${row.wallet}-${row.chain}-${row.symbol}`} color={tint(row.upnl)}>
-            {row.symbol.padEnd(8)}
-            {revealed ? `${money(row.value).padStart(8)} ${money(row.upnl).padStart(9)} ` : ''}
-            {percent(row.upnl, row.cost).padStart(8)}
-            {tag(row)}
-          </Text>
+          <Box key={`${row.wallet}-${row.chain}-${row.symbol}`}>
+            {table(rowCells(row, revealed, cfg.mainLabel), tint(row.upnl), false)}
+          </Box>
         ))}
-        {list.length > 0 && (
-          <Text color={tint(sum.upnl)} bold>
-            {'Total'.padEnd(8)}
-            {revealed ? `${money(sum.value).padStart(8)} ${money(sum.upnl).padStart(9)} ` : ''}
-            {percent(sum.upnl, sum.cost).padStart(8)}
-          </Text>
-        )}
+        {list.length > 0 && table(totalCells(list, revealed), tint(sum.upnl), true)}
         <Box>
           <Text dimColor>updated {at || 'never'}, every {Math.round(everyMs / 1000)}s </Text>
           <Button

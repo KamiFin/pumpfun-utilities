@@ -31,11 +31,42 @@ export function parsePositions(text: string): { rows: Position[]; failed: string
   return { rows, failed }
 }
 
-// Where a position lives, shown only when it is not the main wallet on Solana.
-export function tag(row: Position): string {
-  const parts = [row.chain !== 'Solana' ? row.chain : '', row.wallet !== 'main' ? row.wallet : ''].filter(Boolean)
+// The wallet column: the script calls the main wallet "main"; the user's own name for it is a setting.
+export function walletName(row: Position, mainLabel: string): string {
+  return row.wallet === 'main' || row.wallet === '' ? mainLabel : row.wallet
+}
 
-  return parts.length ? ` ${parts.join(' · ')}` : ''
+export type Column = { label: string; width?: number; isRight: boolean }
+
+// Columns are drawn as boxes of a fixed width in character cells, not as space-padded text: a
+// surface with a proportional font (the desktop app) lines boxes up where padding would not.
+// With values hidden only the percentage shows.
+export function columns(revealed: boolean): Column[] {
+  const wallet = { label: 'Wallet', isRight: false }
+  const token = { label: 'Token', width: 10, isRight: false }
+  const pct = { label: 'PnL %', width: 9, isRight: true }
+
+  return revealed
+    ? [token, { label: 'Value', width: 9, isRight: true }, { label: 'PnL $', width: 10, isRight: true }, pct, wallet]
+    : [token, pct, wallet]
+}
+
+function pick(revealed: boolean, symbol: string, value: string, pnl: string, pct: string, wallet: string): string[] {
+  return revealed ? [symbol, value, pnl, pct, wallet] : [symbol, pct, wallet]
+}
+
+export function headerCells(revealed: boolean): string[] {
+  return columns(revealed).map(column => column.label)
+}
+
+export function rowCells(row: Position, revealed: boolean, mainLabel: string): string[] {
+  return pick(revealed, row.symbol, money(row.value), money(row.upnl), percent(row.upnl, row.cost), walletName(row, mainLabel))
+}
+
+export function totalCells(rows: Position[], revealed: boolean): string[] {
+  const sum = totals(rows)
+
+  return pick(revealed, 'Total', money(sum.value), money(sum.upnl), percent(sum.upnl, sum.cost), '')
 }
 
 export function money(n: number): string {

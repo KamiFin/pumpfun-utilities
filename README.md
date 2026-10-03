@@ -8,7 +8,7 @@ It is read-only. It uses your public wallet address, no private key, and it cann
 
 ## What you get
 
-`/positions` opens the pane. It also opens on its own when a turn runs longer than 10 seconds, and closes when the turn ends. Each row is a position on any chain pump.fun tracks, with its unrealized profit or loss against your cost basis, in green or red, and a total. Positions in other wallets or on another chain carry a tag. Dollar values are hidden until you press Reveal, so a screen share shows percentages only. It refreshes while it is open.
+`/positions` opens the pane. It also opens on its own when a turn runs longer than 10 seconds, and closes when the turn ends. A header names the columns: Token, Value, PnL $, PnL %, Wallet. Each row is a position on any chain pump.fun tracks, with its unrealized profit or loss against your cost basis, in green or red, and the wallet it sits in. A total closes the list. Dollar values are hidden until you press Reveal, so a screen share shows percentages only. It refreshes while it is open.
 
 `/journal` checks your wallet against the journal and prints what is new, what disagrees, and what is open. `/journal write` appends the new closed trades to this month's file, rebuilds an open-positions snapshot and saves the threads under your own callouts. `/journal write 7` looks back 7 days instead of 30.
 
@@ -33,6 +33,7 @@ Nothing is hardcoded. Everything personal is a plugin setting, filled in with `c
 | Setting | Required | What it is |
 |---|---|---|
 | `wallet` | yes | Your main wallet address. Public, read-only. |
+| `mainLabel` | no | The name shown for your main wallet in the Wallet column, for example your pump.fun username. Default `main`. |
 | `extraWallets` | no | Other wallets as `label=address,label=address`. |
 | `journalDir` | no | Folder for the journal. Empty means `~/pumpfun-journal`. Point it at an Obsidian vault if you like. |
 | `heliusKey` | no | A Helius API key, only for the rewards section of `/journal`. Marked sensitive, so it goes to secure storage, not `settings.json`. |
